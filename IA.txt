@@ -1,0 +1,10 @@
+Idée IA HEX :
+
+Technique Maillon
+Placer un pion côte-à-côte d'un pion ennemi (empêcher maillon)
+Premier coup -> sur la diagonale courte
+Si 2e joueur -> Calquer mouvements J1 en bloquants maillons (on en créé en même temps)
+
+MODIF APPORTEES AU CODE :
+Ajout Classe HyperHex
+modif model -> attribut nbTour
