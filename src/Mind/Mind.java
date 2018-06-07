@@ -30,7 +30,7 @@ public class Mind {
 			createLink();	
 		if(linkToComplete()) //Si la chaine est en danger
 			return new CompleteLinkStrategy(linkToJoinOne, linkToJoinTwo);
-		else if(victory < 2 && rotateLink()){ //On vérifie s'il faut inverser la chaine
+		else if(victory < 2 && rotateLink()){//On vérifie s'il faut inverser la chaine
 			if(victory == 1) {
 				buildLink();
 				return link;
@@ -44,8 +44,42 @@ public class Mind {
 			buildNeighbours();
 			return new BreakLinkStrategy(link.getEndLink());
 		}
+		needToRotate();//Vérifie si l'ennemi change de côté pour jouer
 		buildLink();//Sinon, on continue de former nos maillons		
 		return link;
+	}
+
+	private void needToRotate() {
+		if(victory == 0) { //Si aucun bout de la chaine n'est encore bouclé
+			if(numPlayer == 1) {
+				if(hyperhex.getLastEnemyCell().getX() <= Math.round(model.grid.getNbLines() / 2)) { //HyperHex attaque là où se trouve l'ennemi
+					Cell c = link.getEndLink();
+					link.setEndLink(link.getHeadLink());
+					link.setHeadLink(c);
+					link.setDirection("TOP");
+				}
+				else {
+					Cell c = link.getEndLink();
+					link.setEndLink(link.getHeadLink());
+					link.setHeadLink(c);
+					link.setDirection("BOTTOM");
+				}
+			}
+			else {
+				if(hyperhex.getLastEnemyCell().getY() <= Math.round(model.grid.getNbColumns() / 2)) {
+					Cell c = link.getEndLink();
+					link.setEndLink(link.getHeadLink());
+					link.setHeadLink(c);
+					link.setDirection("LEFT");
+				}
+				else {
+					Cell c = link.getEndLink();
+					link.setEndLink(link.getHeadLink());
+					link.setHeadLink(c);
+					link.setDirection("RIGHT");
+				}
+			}
+		}
 	}
 
 	private boolean rotateLink() {
@@ -103,7 +137,6 @@ public class Mind {
 			else if(enemyDestroyLink(c))
 					detection++;
 		}
-		System.out.println(detection + " " + views.size());
 		if(detection == views.size())
 			return true;
 		else
@@ -515,6 +548,7 @@ public class Mind {
 		if(!(model.grid.getCell(x, y) == null) && model.grid.getCell(x, y).getColor().equals(Color.WHITE) && !enemyDestroyLink(model.grid.getCell(x, y)))
 			links.add(model.grid.getCell(x, y));
 		
+		System.out.println(links.size());
 		return links;
 	}
 }
