@@ -31,8 +31,12 @@ public class Mind {
 		if(linkToComplete()) //Si la chaine est en danger
 			return new CompleteLinkStrategy(linkToJoinOne, linkToJoinTwo);
 		else if(victory < 2 && rotateLink()){ //On vérifie s'il faut inverser la chaine
-			buildLink();
-			return link;
+			if(victory == 1) {
+				buildLink();
+				return link;
+			}
+			else
+				return finishlink();
 		}
 		else if(victory == 2) //S'il ne reste plus qu'à compléter la chaine
 			return finishlink();

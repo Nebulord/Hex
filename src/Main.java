@@ -18,8 +18,8 @@ public class Main {
 	public Main(){
 		// Poue les valeur de playerblue et playerred :0 = Joueur humain au clic de souris et 1 = joueur aléatoire
 		// Le joueur bleu commence
-		int playerblue = 0;
-		int playerred = 1;
+		int playerblue = 1;
+		int playerred = 0;
 		int size = 9;
 		//Creation du model
 		HexModel model = new HexModel(size);
