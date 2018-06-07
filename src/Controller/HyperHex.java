@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Cell;
 import Model.HexModel;
+import Strategy.Strategy;
 import View.HexView;
 
 import java.awt.*;
@@ -9,10 +10,12 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Mind.Mind;
+
 /**
- * Abomnes Gauthier
- * Bretheau Yann
- * S3C
+ * Chloé HETYEI
+ * Matthieu CABANES
+ * S4A
  */
 
 public class HyperHex implements ActionListener,MouseListener{
@@ -21,7 +24,9 @@ public class HyperHex implements ActionListener,MouseListener{
 	private HexView view;
 	private int playerblue = 0;
 	private int playerred = 0;
-	private Cell lastCell;
+	private Mind brain;
+	private Cell lastEnemyCell; //dernière cellule jouée par l'ennemi
+	private Cell lastCell; //dernière cellule jouée par HyperHex
 
 	/** ************
 	 *
@@ -43,6 +48,7 @@ public class HyperHex implements ActionListener,MouseListener{
 		view.pGame.bReturn.addActionListener(this);
 
 		view.pVictory.panel.bReturn.addActionListener(this);
+		brain = new Mind(model, this);
 	}
 
 	public HyperHex(HexModel model, HexView view){
@@ -57,6 +63,32 @@ public class HyperHex implements ActionListener,MouseListener{
 		view.pGame.bReturn.addActionListener(this);
 
 		view.pVictory.panel.bReturn.addActionListener(this);
+		brain = new Mind(model, this);
+	}
+
+	public Cell getLastCell() {
+		return lastCell;
+	}
+
+	public void setLastCell(Cell lastCell) {
+		this.lastCell = lastCell;
+	}
+	
+	public Cell getLastEnemyCell() {
+		return lastEnemyCell;
+	}
+
+	public void setLastEnemyCell(Cell lastCell) {
+		this.lastEnemyCell = lastCell;
+	}
+
+
+	public Mind getBrain() {
+		return brain;
+	}
+
+	public void setBrain(Mind brain) {
+		this.brain = brain;
 	}
 
 	/** ******************
@@ -128,12 +160,10 @@ public class HyperHex implements ActionListener,MouseListener{
 		}
 	}
 	
-	//Algorithme définissant la stratégie à adopter selon la situation
-	public Cell defineStrategy() {
-		if(model.getTour() == 0)
-			return Strategy.firstMoveStrategy(model);
-		else 
-			return Strategy.secondMoveStrategy(model, );
+	//HyperHex joue
+	public Cell play() {
+		Strategy s = brain.defineStrategy(); //HyperHex recherche la meilleure stratégie à adopter
+		return s.play(model); //HyperHex joue
 	}
 	
 	/** **************************
@@ -147,6 +177,7 @@ public class HyperHex implements ActionListener,MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		if (model.getInGame())
 		{
+			model.setTour(model.getTour() + 1);
 			// On recupere les coordonnees du clique de la souris
 			float x = e.getX();
 			float y = e.getY();
@@ -162,6 +193,7 @@ public class HyperHex implements ActionListener,MouseListener{
 						if (playerblue ==0){
 							System.out.println("Bleu humain : Cell("+c.getX()+" "+c.getY()+")");
 							c.setColor(Color.BLUE);
+							setLastEnemyCell(c);
 						
 							// On test la victoire pour le joueur bleu, c'est Ã  dire en partant de la cellule bleu en 0,1
 						
@@ -174,6 +206,7 @@ public class HyperHex implements ActionListener,MouseListener{
 						if(playerred == 0){
 							System.out.println("Rouge humain : Cell("+c.getX()+" "+c.getY()+")");
 							c.setColor(Color.RED);
+							setLastEnemyCell(c);
 							model.setPlayer(Color.BLUE);
 							// On test la victoire pour le joueur rouge, c'est Ã  dire en partant de la cellule rouge en 1,0
 							model.researchVictory(1,0);
@@ -184,7 +217,6 @@ public class HyperHex implements ActionListener,MouseListener{
 			}
 		}
 	}
-
 
 	@Override
 	public void mousePressed(MouseEvent e) {

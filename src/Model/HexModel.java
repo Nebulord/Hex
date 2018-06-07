@@ -26,7 +26,7 @@ public class HexModel extends Observable {
     private Color player; //  Bleu ou Rouge selon le joueur
     private Color winner; // Blanche pour auncun gagnant, Bleu ou Rouge selon le gagnant
     private boolean victory; // 0 si un player gagne et 1 sinon
-    private int tour; //Savoir à quel tour le jeu en est.
+    private int tour;
 
     public Grid grid;// = new Grid(9,9); // La grille du jeu
 
@@ -44,17 +44,25 @@ public class HexModel extends Observable {
         this.winner = Color.WHITE;
         this.victory = false; // On affecte false Ã  la victory car auncun player n'a gagnÃ©
         this.grid = new Grid(size,size);
-        this.tour = 0; //Au début, il n'y a aucun tour de joué.
+        tour = 0;
         
         grid.buildGrid(); // On construit la grille
     }
-
+    
 	/** ************
      *
      *  Accesseurs
      *
      *  ************
      */
+    
+	public int getTour() {
+		return tour;
+	}
+	public void setTour(int tour) {
+		this.tour = tour;
+	}
+    
     public boolean getInGame(){
         return this.inGame;
     }
@@ -108,14 +116,6 @@ public class HexModel extends Observable {
     public boolean getVictory(){
         return victory;
     }
-    
-    public int getTour() {
-		return tour;
-	}
-
-	public void setTour(int tour) {
-		this.tour = tour;
-	}
 
     /** ************
      *
@@ -124,6 +124,7 @@ public class HexModel extends Observable {
      *  ************
      */
     public void rebuild() {
+    	setTour(0);
         grid.clear();
         grid.buildGrid();
         this.inGame = false;

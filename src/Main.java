@@ -2,8 +2,8 @@ import java.awt.Color;
 
 import Controller.HexController;
 import Controller.HyperHex;
-import Controller.Strategy;
 import Model.HexModel;
+import Strategy.Strategy;
 import View.HexView;
 import Model.Cell;
 
@@ -18,8 +18,8 @@ public class Main {
 	public Main(){
 		// Poue les valeur de playerblue et playerred :0 = Joueur humain au clic de souris et 1 = joueur aléatoire
 		// Le joueur bleu commence
-		int playerblue = 1;
-		int playerred = 0;
+		int playerblue = 0;
+		int playerred = 1;
 		int size = 9;
 		//Creation du model
 		HexModel model = new HexModel(size);
@@ -30,44 +30,24 @@ public class Main {
 		//HexController controller = new HexController(model,view,playerblue,playerred);
 		HyperHex controller = new HyperHex(model, view, playerblue, playerred);
 		
-		
-		/*while(!model.getFinished()){
-			System.out.print("");
-			if(!model.getVictory()){
-				if(playerblue==1 && model.getPlayer() == Color.BLUE && model.getCurrentGame()){
-					Cell c = controller.randomPlay();
-					System.out.println("Bleu alea : Cell("+c.getX()+" "+c.getY()+")");
-					c.setColor(Color.BLUE);
-					model.setPlayer(Color.RED);
-					model.researchVictory(0,1);
-				}
-
-				else if(playerred==1 && model.getPlayer() == Color.RED && model.getCurrentGame()){
-
-					Cell c = controller.randomPlay();
-					System.out.println("Rouge alea : Cell("+c.getX()+" "+c.getY()+")");
-					c.setColor(Color.RED);
-					model.setPlayer(Color.BLUE);
-					model.researchVictory(1,0);
-				}
-			}
-		}*/
 		while(!model.getFinished()){
 			System.out.print("");
 			if(!model.getVictory()){
 				if(playerblue==1 && model.getPlayer() == Color.BLUE && model.getCurrentGame()){
-					Cell c = controller.defineStrategy();
-					System.out.println("Bleu alea : Cell("+c.getX()+" "+c.getY()+")");
+					Cell c = controller.play();
+					System.out.println("Bleu HyperHex : Cell("+c.getX()+" "+c.getY()+")");
 					c.setColor(Color.BLUE);
 					model.setPlayer(Color.RED);
+					controller.setLastCell(c);
 					model.setTour(model.getTour() + 1);
 					model.researchVictory(0,1);
 				}
 				else if(playerred==1 && model.getPlayer() == Color.RED && model.getCurrentGame()){
-					Cell c = controller.defineStrategy();
-					System.out.println("Rouge alea : Cell("+c.getX()+" "+c.getY()+")");
+					Cell c = controller.play();
+					System.out.println("Rouge HyperHex : Cell("+c.getX()+" "+c.getY()+")");
 					c.setColor(Color.RED);
 					model.setPlayer(Color.BLUE);
+					controller.setLastCell(c);
 					model.setTour(model.getTour() + 1);
 					model.researchVictory(1,0);
 				}
